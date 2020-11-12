@@ -8,12 +8,16 @@ import requests
 import json
 import logging
 import threading
+import sqlalchemy as db
 
 from flask import Flask
+import psycopg2
 
 from flask import jsonify
 
 from bs4 import BeautifulSoup
+import pandas as pd
+from sqlalchemy import create_engine
 from flask import Flask, jsonify
 from datetime import datetime
 import sys
@@ -51,7 +55,22 @@ FETCH_INTERVAL = 1800
 
 @app.route('/api/get', methods=['GET'])
 def get_tasks():
-    return jsonify({'tasks': tasks})
+    engine = create_engine('postgresql+psycopg2://postgres:shiny@10@localhost:5432/postgres')     
+    connection = engine.connect()
+    metadata = db.MetaData()
+    statewise_data = db.Table('statewise_data', metadata, autoload=True, autoload_with=engine)    
+    query = db.select([statewise_data])  
+    ResultProxy = connection.execute(query)
+    ResultSet = ResultProxy.fetchall()
+    df = pd.DataFrame(ResultSet)
+    return df.to_dict('index')
+    # with engine.begin() as conn:
+    #     conn.execute(sql)
+    # credentials = "postgresql://postgres:shiny@10@localhost:5432/postgres"
+    # dataframe = pd.read_sql("SELECT * from statewise_data", con = credentials)
+    # #print(dataframe)
+    # result = dataframe.to_json(orient='records')
+    # return result
 
 # scrapes table from the given url
 def get_table_from_web():
