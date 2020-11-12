@@ -16,7 +16,6 @@ from flask import jsonify
 from bs4 import BeautifulSoup
 from flask import Flask, jsonify
 from datetime import datetime
-import config
 import sys
 
 app = Flask(__name__)
@@ -111,7 +110,6 @@ def insert_data(items):
     sql = """INSERT INTO statewise_data VALUES(item.total,item.changesinceyest,item.cumulative,item.sinceyest,item.deathcum,item.deathsinceyest,item.statename) ;"""
     conn = None
     try:
-        params = config()
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
         cur.executemany(sql,vendor_list)
