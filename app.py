@@ -58,7 +58,7 @@ def get_tasks():
     engine = create_engine('postgresql+psycopg2://postgres:shiny@10@localhost:5432/postgres')     
     connection = engine.connect()
     metadata = db.MetaData()
-    statewise_data = db.Table('statewise_data', metadata, autoload=True, autoload_with=engine)    
+    statewise_data = db.Table('statewise_data', metadata, autoload=True, autoload_with=engine,port=5433)    
     query = db.select([statewise_data])  
     ResultProxy = connection.execute(query)
     ResultSet = ResultProxy.fetchall()
