@@ -24,15 +24,6 @@ import sys
 
 app = Flask(__name__)
 
-tasks = [
-    {
-        'id': 5,
-        'title': u'hi this is shiny',
-        'description': u'Milk, Cheese, Pizza, Fruit, Tylenol', 
-        'done': False
-    }
-]
-
 # Removed Foreign National Column
 headers = {
     0: "id",
@@ -58,7 +49,7 @@ def get_tasks():
     engine = create_engine('postgresql+psycopg2://postgres:shiny@10@localhost:5432/postgres')     
     connection = engine.connect()
     metadata = db.MetaData()
-    statewise_data = db.Table('statewise_data', metadata, autoload=True, autoload_with=engine,port=5433)    
+    statewise_data = db.Table('statewise_data', metadata, autoload=True, autoload_with=engine)    
     query = db.select([statewise_data])  
     ResultProxy = connection.execute(query)
     ResultSet = ResultProxy.fetchall()
