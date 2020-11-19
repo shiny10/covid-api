@@ -38,6 +38,8 @@ headers = {
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
+app.debug = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://qgxykuxadonick:8ac747d502e1d75068fa5caf3b526792f8f324215c497bb326b3895f0f75e58e@ec2-52-2-82-109.compute-1.amazonaws.com:5432/dddk9dduidt59d'
 
 # config
 FETCH_INTERVAL = 1800
