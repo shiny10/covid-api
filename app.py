@@ -8,7 +8,7 @@ import requests
 import json
 import logging
 import threading
-import sqlalchemy as db
+import sqlalchemy as d
 
 from flask import Flask
 import psycopg2
@@ -50,9 +50,9 @@ FETCH_INTERVAL = 1800
 def get_tasks():
     engine = create_engine('postgresql+psycopg2://postgres:shiny@10@localhost:5432/postgres')     
     connection = engine.connect()
-    metadata = db.MetaData()
-    statewise_data = db.Table('statewise_data', metadata, autoload=True, autoload_with=engine)    
-    query = db.select([statewise_data])  
+    metadata = d.MetaData()
+    statewise_data = d.Table('statewise_data', metadata, autoload=True, autoload_with=engine)    
+    query = d.select([statewise_data])  
     ResultProxy = connection.execute(query)
     ResultSet = ResultProxy.fetchall()
     df = pd.DataFrame(ResultSet)
