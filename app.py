@@ -8,16 +8,13 @@ import requests
 import json
 import logging
 import threading
-import sqlalchemy as db
 
 from flask import Flask
-import psycopg2
 
 from flask import jsonify
 
 from bs4 import BeautifulSoup
 import pandas as pd
-from sqlalchemy import create_engine
 from flask import Flask, jsonify
 from datetime import datetime
 import sys
@@ -26,13 +23,229 @@ app = Flask(__name__)
 
 
 # Removed Foreign National Column
-headers = {
-    0: "id",
-    1: "place",
-    2: "active",
-    3: "cured",
-    4: "deaths",
-    5: "total_confirmed"
+
+
+data = {
+  "0": {
+    "0": 1, 
+    "1": 164, 
+    "2": 3, 
+    "3": 4282, 
+    "4": 15, 
+    "5": 61, 
+    "6": 1.0, 
+    "7": "hi                      "
+  }, 
+  "1": {
+    "0": 2, 
+    "1": 20857, 
+    "2": 58, 
+    "3": 822011, 
+    "4": 1777, 
+    "5": 6837, 
+    "6": 9.0, 
+    "7": "Andhra Pradesh                                    "
+  }, 
+  "2": {
+    "0": 3, 
+    "1": 1440, 
+    "2": 45, 
+    "3": 14214, 
+    "4": 88, 
+    "5": 47, 
+    "6": 1.0, 
+    "7": "Arunachal Pradesh                                 "
+  }, 
+  "3": {
+    "0": 4, 
+    "1": 4799, 
+    "2": 572, 
+    "3": 204079, 
+    "4": 771, 
+    "5": 957, 
+    "6": 3.0, 
+    "7": "Assam                                             "
+  }, 
+  "4": {
+    "0": 5, 
+    "1": 5763, 
+    "2": 52, 
+    "3": 217594, 
+    "4": 654, 
+    "5": 1167, 
+    "6": 5.0, 
+    "7": "Bihar                                             "
+  }, 
+  "5": {
+    "0": 6, 
+    "1": 1002, 
+    "2": 44, 
+    "3": 14297, 
+    "4": 64, 
+    "5": 244, 
+    "6": 1.0, 
+    "7": "Chandigarh                                        "
+  }, 
+  "6": {
+    "0": 7, 
+    "1": 20061, 
+    "2": 165, 
+    "3": 185152, 
+    "4": 1962, 
+    "5": 2527, 
+    "6": 20.0, 
+    "7": "Chhattisgarh                                      "
+  }, 
+  "7": {
+    "0": 8, 
+    "1": 61, 
+    "2": 165, 
+    "3": 185152, 
+    "4": 1962, 
+    "5": 2527, 
+    "6": 20.0, 
+    "7": "Dadra and Nagar Haveli and Daman and Diu          "
+  }, 
+  "8": {
+    "0": 9, 
+    "1": 43116, 
+    "2": 487, 
+    "3": 416580, 
+    "4": 6462, 
+    "5": 7332, 
+    "6": 104.0, 
+    "7": "Delhi                                             "
+  }, 
+  "9": {
+    "0": 11, 
+    "1": 12321, 
+    "2": 98, 
+    "3": 168858, 
+    "4": 1175, 
+    "5": 3785, 
+    "6": 9.0, 
+    "7": "Gujarat                                           "
+  }, 
+  "10": {
+    "0": 12, 
+    "1": 18867, 
+    "2": 754, 
+    "3": 172265, 
+    "4": 2015, 
+    "5": 1979, 
+    "6": 19.0, 
+    "7": "Haryana                                           "
+  }, 
+  "11": {
+    "0": 13, 
+    "1": 6165, 
+    "2": 560, 
+    "3": 21607, 
+    "4": 199, 
+    "5": 411, 
+    "6": 6.0, 
+    "7": "Himachal Pradesh                                  "
+  }, 
+  "12": {
+    "0": 14, 
+    "1": 5578, 
+    "2": 98, 
+    "3": 93824, 
+    "4": 511, 
+    "5": 1566, 
+    "6": 8.0, 
+    "7": "Jammu and Kashmir                                 "
+  }, 
+  "13": {
+    "0": 15, 
+    "1": 3668, 
+    "2": 341, 
+    "3": 100908, 
+    "4": 606, 
+    "5": 917, 
+    "6": 4.0, 
+    "7": "Jharkhand                                         "
+  }, 
+  "14": {
+    "0": 29, 
+    "1": 264, 
+    "2": 27, 
+    "3": 4019, 
+    "4": 48, 
+    "5": 85, 
+    "6": 3.0, 
+    "7": "Sikkim                                            "
+  }, 
+  "15": {
+    "0": 28, 
+    "1": 17352, 
+    "2": 359, 
+    "3": 199943, 
+    "4": 1804, 
+    "5": 2032, 
+    "6": 13.0, 
+    "7": "Rajasthan                                         "
+  }, 
+  "16": {
+    "0": 27, 
+    "1": 5439, 
+    "2": 193, 
+    "3": 130018, 
+    "4": 469, 
+    "5": 4412, 
+    "6": 23.0, 
+    "7": "Punjab                                            "
+  }, 
+  "17": {
+    "0": 26, 
+    "1": 1071, 
+    "2": 6, 
+    "3": 34501, 
+    "4": 69, 
+    "5": 607, 
+    "6": 2.0, 
+    "7": "Puducherry                                        "
+  }, 
+  "18": {
+    "0": 25, 
+    "1": 10762, 
+    "2": 292, 
+    "3": 293741, 
+    "4": 1264, 
+    "5": 1483, 
+    "6": 14.0, 
+    "7": "Odisha                                            "
+  }, 
+  "19": {
+    "0": 24, 
+    "1": 789, 
+    "2": 52, 
+    "3": 8776, 
+    "4": 89, 
+    "5": 50, 
+    "6": 100, 
+    "7": "Nagaland                                          "
+  }, 
+  "20": {
+    "0": 23, 
+    "1": 568, 
+    "2": 16, 
+    "3": 2739, 
+    "4": 51, 
+    "5": 2, 
+    "6": 50, 
+    "7": "Mizoram                                           "
+  }, 
+  "21": {
+    "0": 22, 
+    "1": 1045, 
+    "2": 83, 
+    "3": 9368, 
+    "4": 56, 
+    "5": 98, 
+    "6": 4.0, 
+    "7": "Meghalaya                                         "
+  }
 }
 
 # Initialisations
@@ -48,22 +261,8 @@ FETCH_INTERVAL = 1800
 
 @app.route('/api/get', methods=['GET'])
 def get_tasks():
-    engine = create_engine('postgresql+psycopg2://postgres:shiny@10@localhost:5432/postgres')     
-    connection = engine.connect()
-    metadata = db.MetaData()
-    statewise_data = db.Table('statewise_data', metadata, autoload=True, autoload_with=engine)    
-    query = db.select([statewise_data])  
-    ResultProxy = connection.execute(query)
-    ResultSet = ResultProxy.fetchall()
-    df = pd.DataFrame(ResultSet)
-    return df.to_dict('index')
-    # with engine.begin() as conn:
-    #     conn.execute(sql)
-    # credentials = "postgresql://postgres:shiny@10@localhost:5432/postgres"
-    # dataframe = pd.read_sql("SELECT * from statewise_data", con = credentials)
-    # #print(dataframe)
-    # result = dataframe.to_json(orient='records')
-    # return result
+   return data
+    
 
 # scrapes table from the given url
 def get_table_from_web():
@@ -118,20 +317,6 @@ def get_data(content, time, indent=None):
     
     return response
 
-def insert_data(items):
-    sql = """INSERT INTO statewise_data VALUES(item.total,item.changesinceyest,item.cumulative,item.sinceyest,item.deathcum,item.deathsinceyest,item.statename) ;"""
-    conn = None
-    try:
-        conn = psycopg2.connect(**params)
-        cur = conn.cursor()
-        cur.executemany(sql,vendor_list)
-        conn.commit()
-        cur.close()
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
 
 # parent function that calls the scraping function and get_data function
 def data_extract():
