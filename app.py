@@ -8,7 +8,7 @@ import requests
 import json
 import logging
 import threading
-import sqlalchemy as d
+import sqlalchemy as db
 
 from flask import Flask
 import psycopg2
@@ -24,6 +24,7 @@ import sys
 
 app = Flask(__name__)
 
+
 # Removed Foreign National Column
 headers = {
     0: "id",
@@ -38,8 +39,7 @@ headers = {
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
-app.debug = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://qgxykuxadonick:8ac747d502e1d75068fa5caf3b526792f8f324215c497bb326b3895f0f75e58e@ec2-52-2-82-109.compute-1.amazonaws.com:5432/dddk9dduidt59d'
+
 
 # config
 FETCH_INTERVAL = 1800
@@ -50,9 +50,9 @@ FETCH_INTERVAL = 1800
 def get_tasks():
     engine = create_engine('postgresql+psycopg2://postgres:shiny@10@localhost:5432/postgres')     
     connection = engine.connect()
-    metadata = d.MetaData()
-    statewise_data = d.Table('statewise_data', metadata, autoload=True, autoload_with=engine)    
-    query = d.select([statewise_data])  
+    metadata = db.MetaData()
+    statewise_data = db.Table('statewise_data', metadata, autoload=True, autoload_with=engine)    
+    query = db.select([statewise_data])  
     ResultProxy = connection.execute(query)
     ResultSet = ResultProxy.fetchall()
     df = pd.DataFrame(ResultSet)
